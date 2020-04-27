@@ -1,3 +1,4 @@
+@ -1,8 +0,0 @@
 require "Weather/Confirmation/version"
 
 module Weather
