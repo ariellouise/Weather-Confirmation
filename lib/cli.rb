@@ -2,7 +2,7 @@ class CNYWeatherConfirmation::CLI
 
     def menu
         puts " "
-        puts "Thank you for using CNY Weather Confirmation"
+        puts "Thank you for using CNY Weather Confirmation!"
         current
         scrap_data
         day
