@@ -16,4 +16,8 @@ class CNYWeatherConfirmation::Forecast
     @@all
   end
 
-  
+  def self.find_by_name(name)
+    all.detect{|f| f.name = name}
+  end
+
+end
