@@ -33,3 +33,4 @@ def self.scrape_day_after
     tonight = doc.search().text
     CNYWeatherConfirmation::Forecast.new(name, high, low, description, tonight)
 end
+

@@ -1,9 +1,8 @@
 @ -1,8 +0,0 @@
-require "Weather/Confirmation/version"
+require 'open-uri'
+require 'Nokogiri'
 
-module Weather
-  module Confirmation
-    class Error < StandardError; end
-    # Your code goes here...
-  end
-end
+require_relative 'lib/version.rb'
+require_relative 'lib/cli.rb'
+require_relative 'lib/forecast.rb'
+require_relative 'lib/scraper.rb'
