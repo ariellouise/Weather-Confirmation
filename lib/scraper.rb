@@ -1,36 +1,46 @@
-class CNYWeatherScraper::CNYWeatherScraper
+require 'Nokogiri'
+require 'open-uri'
 
-#https://www.accuweather.com/en/us/rome/13440/weather-forecast/334623
+class WeatherConfirmationScraper
+   attr_accessor :name, :high, :low, :description, :tonight
 
-base_url = "https://www.accuweather.com/en/us/rome/13440/weather-forecast/334623?day="
+    #https://www.accuweather.com/en/us/rome/13440/daily-weather-forecast/334623
+      BASE_URL = "https://www.accuweather.com/en/us/rome/13440/daily-weather-forecast/334623?day="
+    
+        def self.scrape_today
+          doc = Nokogiri::HTML(open("http://www.accuweather.com/en/us/rome/13440/daily-weather-forecast/334623?day=1"))
+          name = doc.search(".clearfix h3.lt time").text.strip
+          high = doc.search("#detail-day-night .day span.large-temp").text.strip
+          low = doc.search("#detail-day-night .night span.large-temp").text.strip
+          description = doc.search("#detail-day-night .day .cond").text.strip
+          tonight =  doc.search("#detail-day-night .night .cond").text.strip
+          CNYWeatherConfirmation::Forecast.new(high, low, description, name, tonight)
+        end
+    
+        def self.scrape_tomorrow
+          doc = Nokogiri::HTML(open("https://www.accuweather.com/en/us/rome/13440/daily-weather-forecast/334623?day=2"))
+          name = doc.search("li.day.fday2.current.cl h4").text.strip
+          high = doc.search("li.day.fday2.current.cl span.large-temp").text.strip
+          low = doc.search("li.day.fday2.current.cl span.small-temp").text.strip
+          description = doc.search("li.day.fday2.current.cl span.cond").text.strip
+          tonight = doc.search("#detail-day-night .night .cond").text.strip
+          CNYWeatherConfirmation::Forecast.new(high, low, description, name, tonight)
+        end
+    
+        def self.scrape_future(num)
+          doc = Nokogiri::HTML(open("#{BASE_URL}#{num}"))
+          name = doc.search("li.day.fday#{num}.current.cl h4").text.strip
+          high = doc.search("li.day.fday2.current.cl span.large-temp").text.strip
+          low = doc.search("li.day.fday2.current.cl span.small-temp").text.strip
+          description = doc.search("li.day.fday2.current.cl span.cond").text.strip
+          tonight = doc.search("#detail-day-night .night .cond").text.strip
+          CNYWeatherConfirmation::Forecast.new(high, low, description, name, tonight)
+        end
+    
+    
+        def self.current_scraper
+           doc = Nokogiri::HTML(open("https://www.accuweather.com/en/us/rome/13440/daily-weather-forecast/334623?day=1"))
+            current_temp = doc.search("#forecast-extended .subnav .subnav-dropdown-container span").text.strip
+        end  
 
-def self.scrape_today
-    doc = Nokogiri::HTML(open("https://www.accuweather.com/en/us/rome/13440/daily-weather-forecast/334623?day=1"))
-      name = doc.search(".day panel .module header").text
-      high = doc.search().text
-      low = doc.search().text
-      description = doc.search().text
-      tonight = doc.search().text
-      CNYWeatherConfirmation::Forecast.new(name, high, low, description, tonight)
-end 
-
-def self.scrape_tomorrow
-    doc = Nokogiri::HTML(open("https://www.accuweather.com/en/us/rome/13440/daily-weather-forecast/334623?day=2"))
-    name = doc.search().text
-    high = doc.search().text
-    low = doc.search().text
-    description = doc.search().text
-    tonight = doc.search().text
-    CNYWeatherConfirmation::Forecast.new(name, high, low, description, tonight)
-end
-
-def self.scrape_day_after
-    doc = Nokogiri::HTML(open("https://www.accuweather.com/en/us/rome/13440/daily-weather-forecast/334623?day=3"))
-    name = doc.search().text
-    high = doc.search().text
-    low = doc.search().text
-    description = doc.search().text
-    tonight = doc.search().text
-    CNYWeatherConfirmation::Forecast.new(name, high, low, description, tonight)
-end
-
+    end
